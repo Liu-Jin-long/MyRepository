@@ -1,0 +1,8 @@
+#目前是最通用的Makefile
+SRCS:=$(wildcard *.c) #拿到当前目录下所有的c文件
+TARGETS:=$(SRCS:%.c=%)
+all:$(TARGETS)
+	@for i in $(TARGETS);do gcc -o $${i} $${i}.c;done
+
+clean:
+	rm -rf $(TARGETS)

@@ -1,0 +1,12 @@
+out:=main
+main:main.o func.o
+	gcc main.o func.o -o $(out)
+main.o:main.c
+	gcc -c main.c
+func.o:func.c
+	gcc -c func.c
+
+#.PHONY:clean rebuild
+rebuild:clean $(out)
+clean:
+	rm -rf main.o func.o $(out)

@@ -1,0 +1,11 @@
+out:=main
+#预定义变量
+CC:=gcc
+CFLAGS:=-g
+main:main.o func.o
+	gcc main.o func.o -o $(out)
+
+#.PHONY:clean rebuild
+rebuild:clean $(out)
+clean:
+	rm -rf main.o func.o $(out)

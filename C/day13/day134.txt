@@ -1,0 +1,131 @@
+    1  ifconfig
+    2  s
+
+
+
+
+
+udo apt install net-tools
+    3  ps -el
+
+
+
+
+
+
+
+
+f|grep ssh
+    4  ifconfig
+    5 
+
+
+
+
+
+ sudo a
+pt install net-tools
+    6  ps -elf|grep ssh
+    7  p
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ing www.baidu.com
+    8
+
+
+
+
+
+
+
+  sudo apt install net-tools
+    9  ifconfig
+   10  sudo apt install ssh
+   11  sudo apt 
+
+
+
+
+
+install net-tools
+   12  sudo a
+
+
+
+
+
+
+pt install ssh
+   13  p
+
+
+
+
+
+
+
+
+s -elf|grep ssh
+   14  ifconfig
+   15  p
+
+
+
+
+
+
+
+
+
+
+
+
+ing www.baidu.com
+   16  ifconfig
+   17  sudo userdel user1
+   18  
+
+
+
+
+
+
+
+
+
+
+
+cat /etc/passwd
+   19  sudo passwd xiuer
+   20  sud
+
+
+
+
+
+
+
+
+o passwd lele
+   21  history
+   22  su lele
+   23  
+
+
+sudo -m zhangsan /bin/bash
+   24  su lele
+  

@@ -1,0 +1,166 @@
+void splitWords(pTKWord* pphead, pTKWord* pptail, char* buf)
+{
+	TKWord temp = { 0 };
+	char word[200] = { 0 };
+	for (unsigned int i = 0, j; i < strlen(buf); i++)
+	{
+		j = 0;
+		if (isalpha(buf[i]) || '_' == buf[i])
+		{
+			while (isalnum(buf[i]) || '_' == buf[i])
+			{
+				word[j++] = buf[i++];
+			}
+			i--;
+
+			strcpy(temp.word, word);
+			pTKWord cur = tk_HashTable[elf_hash(word)];
+			while (cur)//token
+			{
+				if (!strcmp(cur->word, word)) break;
+				cur = cur->next;
+			}
+
+			if (cur != NULL )
+			{
+				temp.token = cur->token;
+				printf("\n%d\n", cur->token);
+			}
+			else
+			{
+				temp.token = TK_IDENTV;
+			}
+			Tail_Insert(pphead, pptail, temp);
+			
+		}
+		else if (' ' == buf[i])
+		{
+			printf("%c", buf[i]);
+		}
+		else if ('"' == buf[i])
+		{
+			word[j++] = buf[i++];
+			while (buf[i] != '"')
+			{
+				word[j++] = buf[i++];
+			}
+			word[j] = buf[i];
+			strcpy(temp.word, word);
+			temp.token = TK_CSTR;
+			Tail_Insert(pphead, pptail, temp);
+
+		}
+		else if ('\'' == buf[i])
+		{
+			word[j++] = buf[i++];
+			while (1)
+			{
+				if ('\'' == buf[i] && buf[i + 1] != '\'') break;
+				word[j++] = buf[i++];
+			}
+			word[j] = buf[i];
+
+			strcpy(temp.word, word);
+			temp.token = TK_CCHAR;
+			Tail_Insert(pphead, pptail, temp);
+		}
+		else if ('/' == buf[i] && '/' == buf[i + 1])//comment
+		{
+			SetConsoleTextAttribute(h, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+			while (buf[i] != '/n' && buf[i] != '\0')
+			{
+				word[j++] = buf[i++];
+			}
+			printf("%s", word);
+		}
+		else if (isdigit(buf[i]))
+		{
+			while (isdigit(buf[i]))
+			{
+				word[j++] = buf[i++];
+			}
+			if ('.' == buf[i])
+			{
+				word[j++] = buf[i++];
+				while (isdigit(buf[i]))
+				{
+					word[j++] = buf[i++];
+				}
+				i--;
+				
+				strcpy(temp.word, word);
+				temp.token = TK_CFLOAT;
+				Tail_Insert(pphead, pptail, temp);
+				
+			}
+			else
+			{
+				i--;
+				strcpy(temp.word, word);
+				temp.token = TK_CINT;
+				Tail_Insert(pphead, pptail, temp);
+			}
+		}
+		else if (ispunct(buf[i]))
+		{
+			if ('=' == buf[i] && '=' == buf[i + 1])
+			{
+				word[j++] = buf[i++];
+				word[j++] = buf[i++];
+			}
+			else if ('!' == buf[i] && '=' == buf[i + 1])
+			{
+				word[j++] = buf[i++];
+				word[j++] = buf[i++];
+			}
+			else if ('<' == buf[i] && '=' == buf[i + 1])
+			{
+				word[j++] = buf[i++];
+				word[j++] = buf[i++];
+			}
+			else if ('>' == buf[i] && '=' == buf[i + 1])
+			{
+				word[j++] = buf[i++];
+				word[j++] = buf[i++];
+			}
+			else if ('-' == buf[i] && '>' == buf[i + 1])
+			{
+				word[j++] = buf[i++];
+				word[j++] = buf[i++];
+			}
+			else
+			{
+				word[j++] = buf[i++];
+			}
+			i--;
+
+			strcpy(temp.word, word);
+			pTKWord cur = tk_HashTable[elf_hash(word)];
+			while (cur)
+			{
+				if (!strcmp(cur->word, word)) break;
+				cur = cur->next;
+			}
+
+			if (cur != NULL && strcmp(cur->word, word) == 0)
+			{
+				temp.token = cur->token;
+				printf("\n%d\n", temp.token);
+			}
+			else
+			{
+				temp.token = TK_IDENTV;
+			}
+			Tail_Insert(pphead, pptail, temp);
+
+		}
+		else if ('\t' == buf[i])
+		{
+			printf("    ");
+		}
+		
+		//printf("\n%d\n",temp.token);
+		memset(&temp, 0, sizeof(temp));
+		memset(word, 0, sizeof(word));
+	}
+}
