@@ -1,5 +1,8 @@
 # 加油！！！
-import packaging.version
+# axis=0 读取每一列，改变行
+# axis=1 读取每一行，改变列
+
+
 import pandas as pd
 import numpy as np
 
