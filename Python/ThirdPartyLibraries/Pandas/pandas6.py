@@ -34,6 +34,31 @@ def diff_mean(s):
 print(df_obj.groupby('key1').transform(diff_mean))
 print('-' * 50)
 
+# groupby.apply(func) func函数也可以在各分组上分别调用，最后结果通过pd.concat组装到一起（数据合并）
+dict_obj = {'data1': ['a', 'b', 'c', 'b',
+                      'a', 'b', 'a', 'c', 'c'],
+            'data2': [1, 1, 3, 2,
+                      2, 3, 3, 2, 1],
+            'score': [11, 11, 33, 22,
+                      22, 33, 33, 22, 11]}
+df_obj = pd.DataFrame(dict_obj)
+print(df_obj)
+
+def top_n(df, n=2, column='data2'):
+    '''返回每个分组按 column 的 top n 数据'''
+    return df.sort_values(by=column, ascending=False)[:n]
+
+print(df_obj.groupby('data1').apply(top_n))
+# 禁止层级索引(分组后不再增加一层分组依据的索引), group_keys=False
+print(df_obj.groupby('data1', group_keys=False).apply(top_n))
+print('-' * 50)
+def top_n(df, n, column):
+    '''返回每个分组按 column 的 top n 数据'''
+    return df.sort_values(by=column, ascending=False)[:n]
+
+# apply 函数接收的参数会传入自定义的函数中
+print(df_obj.groupby('data1').apply(top_n, n=2, column='data2'))
+
 # 数据连接
 df_obj1 = pd.DataFrame({'key': ['b', 'b', 'a', 'c', 'a', 'a', 'b'],
                         'data1': np.random.randint(0, 10, 7)})

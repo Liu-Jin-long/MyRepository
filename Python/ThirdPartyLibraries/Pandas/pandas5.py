@@ -18,6 +18,13 @@ print(new_df)
 # 将DataFrame某些列变为行索引
 print(df_obj)
 print(df_obj.set_index(['c', 'd']))
+print('-' * 50)
+# 将DataFrame重置索引  增加使用默认位置索引
+print(df_obj)
+print(df_obj.sort_values('b').reset_index())
+print(df_obj.reset_index())
+print('-' * 50)
+
 
 # 时间序列
 # end和periods只需写一个
@@ -44,6 +51,8 @@ print(country_count['CN'])
 import matplotlib.pyplot as plt
 
 country_cn = df_obj[df_obj['Country'] == 'CN']
+print(country_cn.groupby(by="State/Province").count())
+print(country_cn.groupby(by="State/Province").sum())
 cn_province = country_cn.groupby(by="State/Province").count()['Brand'].sort_values(ascending=False)
 print(cn_province)
 plt.figure(figsize=(20, 10), dpi=80)
