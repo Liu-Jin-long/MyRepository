@@ -1,0 +1,27 @@
+{
+    "files.associations": {
+        "cstdio": "c",
+        "thread_pool.h": "c",
+        "common.h": "c",
+        "in.h": "c",
+        "cstdlib": "c",
+        "factory.h": "c",
+        "string.h": "c",
+        "mysql_op.h": "c",
+        "operation.h": "c",
+        "func.h": "c",
+        "md5.h": "c",
+        "md5sum.h": "c",
+        "limits": "c",
+        "strings.h": "c",
+        "link_list.h": "c",
+        "stdlib.h": "c",
+        "tcp_epoll_op.h": "c",
+        "work_queue.h": "c",
+        "client_op.h": "c",
+        "transfer_file.h": "c",
+        "cassert": "c",
+        "mman.h": "c",
+        "config.h": "c"
+    }
+}
