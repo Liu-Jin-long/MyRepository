@@ -1,14 +1,14 @@
 #include "mysql_op.h"
 int init_mysql(MYSQL **connection)
 {
-    const char *server_host = "127.0.0.1";
-    const char *user = "root";
-    const char *password = "123";
-    const char *database = "NetworkDiskDatabase";
+    const char *server_host = IP;
+    const char *user = MYSQL_USERNAME;
+    const char *password = MYSQL_PASSWORD;
+    const char *database = DATABASE_NAME;
     *connection = mysql_init(NULL);
     if (!mysql_real_connect(*connection, server_host, user, password, database, 0, NULL, 0))
     {
-        // printf("Error connecting to database:%s\n", mysql_error(*connection));
+        printf("Error connecting to database:%s\n", mysql_error(*connection));
         mysql_close(*connection);
         return 0;
     }

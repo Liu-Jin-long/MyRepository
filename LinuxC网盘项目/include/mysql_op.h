@@ -1,5 +1,6 @@
 #ifndef __MYSQL_OP_H__
 #define __MYSQL_OP_H__
+#include "config.h"
 #include <mysql/mysql.h>
 #include <string.h>
 #include <stdio.h>

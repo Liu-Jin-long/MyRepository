@@ -6,6 +6,12 @@
 #define PORT "2000"
 //服务器端文件池路径
 #define FILE_POOL_PATH "../resource/"
+//服务器mysql数据库用户名
+#define MYSQL_USERNAME "root"
+//服务器mysql数据库密码
+#define MYSQL_PASSWORD "123"
+//服务器mysql使用的数据库名
+#define DATABASE_NAME "NetworkDiskDatabase"
 //服务器端子线程数量
 #define THREAD_NUM 5
 //服务器端子线程池容量

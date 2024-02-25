@@ -77,7 +77,7 @@ int main()
     {
         if (state_data.state == UserNameDoesNotExist)
         {
-            printf("用户名不存在!!!请更换用户名进行登录!\n");
+            printf("用户名不存在!!!\n");
             return -1;
         }
         else if (state_data.state == PasswordError)
