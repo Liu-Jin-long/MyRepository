@@ -29,7 +29,7 @@ mysql -u username -p password
 创建网盘数据库 
 
 ```
-create database netdisk;
+create database NetworkDiskDatabase;
 ```
 
 导入sql文件 
