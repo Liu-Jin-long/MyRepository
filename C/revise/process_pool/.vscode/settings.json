@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "mman.h": "c",
+        "unistd.h": "c",
+        "epoll.h": "c",
+        "process_pool.h": "c"
+    }
+}
