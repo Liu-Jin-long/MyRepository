@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<circuit>
+  <version>2</version>
+  <attributes>
+    <entry>
+      <string>backgroundColor</string>
+      <awt-color>
+        <red>204</red>
+        <green>255</green>
+        <blue>204</blue>
+        <alpha>255</alpha>
+      </awt-color>
+    </entry>
+    <entry>
+      <string>romContent</string>
+      <romList>
+        <roms/>
+      </romList>
+    </entry>
+    <entry>
+      <string>Width</string>
+      <int>4</int>
+    </entry>
+  </attributes>
+  <visualElements>
+    <visualElement>
+      <elementName>In</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Description</string>
+          <string>data input</string>
+        </entry>
+        <entry>
+          <string>Label</string>
+          <string>Din</string>
+        </entry>
+      </elementAttributes>
+      <pos x="-560" y="20"/>
+    </visualElement>
+    <visualElement>
+      <elementName>In</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Description</string>
+          <string>write enable latch</string>
+        </entry>
+        <entry>
+          <string>Label</string>
+          <string>WE</string>
+        </entry>
+      </elementAttributes>
+      <pos x="-560" y="240"/>
+    </visualElement>
+    <visualElement>
+      <elementName>与门.dig</elementName>
+      <elementAttributes/>
+      <pos x="-380" y="20"/>
+    </visualElement>
+    <visualElement>
+      <elementName>与门.dig</elementName>
+      <elementAttributes/>
+      <pos x="-300" y="200"/>
+    </visualElement>
+    <visualElement>
+      <elementName>与门.dig</elementName>
+      <elementAttributes/>
+      <pos x="20" y="80"/>
+    </visualElement>
+    <visualElement>
+      <elementName>或门.dig</elementName>
+      <elementAttributes/>
+      <pos x="-200" y="0"/>
+    </visualElement>
+    <visualElement>
+      <elementName>非门.dig</elementName>
+      <elementAttributes/>
+      <pos x="-500" y="160"/>
+    </visualElement>
+    <visualElement>
+      <elementName>非门.dig</elementName>
+      <elementAttributes/>
+      <pos x="-120" y="220"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Out</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>Dout</string>
+        </entry>
+      </elementAttributes>
+      <pos x="200" y="100"/>
+    </visualElement>
+  </visualElements>
+  <wires>
+    <wire>
+      <p1 x="-520" y="160"/>
+      <p2 x="-500" y="160"/>
+    </wire>
+    <wire>
+      <p1 x="-440" y="160"/>
+      <p2 x="-320" y="160"/>
+    </wire>
+    <wire>
+      <p1 x="-560" y="240"/>
+      <p2 x="-400" y="240"/>
+    </wire>
+    <wire>
+      <p1 x="-400" y="240"/>
+      <p2 x="-300" y="240"/>
+    </wire>
+    <wire>
+      <p1 x="-40" y="80"/>
+      <p2 x="20" y="80"/>
+    </wire>
+    <wire>
+      <p1 x="-560" y="20"/>
+      <p2 x="-520" y="20"/>
+    </wire>
+    <wire>
+      <p1 x="-140" y="20"/>
+      <p2 x="-40" y="20"/>
+    </wire>
+    <wire>
+      <p1 x="-520" y="20"/>
+      <p2 x="-380" y="20"/>
+    </wire>
+    <wire>
+      <p1 x="80" y="100"/>
+      <p2 x="140" y="100"/>
+    </wire>
+    <wire>
+      <p1 x="140" y="100"/>
+      <p2 x="200" y="100"/>
+    </wire>
+    <wire>
+      <p1 x="-200" y="-40"/>
+      <p2 x="140" y="-40"/>
+    </wire>
+    <wire>
+      <p1 x="-320" y="200"/>
+      <p2 x="-300" y="200"/>
+    </wire>
+    <wire>
+      <p1 x="-320" y="40"/>
+      <p2 x="-200" y="40"/>
+    </wire>
+    <wire>
+      <p1 x="-40" y="120"/>
+      <p2 x="20" y="120"/>
+    </wire>
+    <wire>
+      <p1 x="-400" y="60"/>
+      <p2 x="-380" y="60"/>
+    </wire>
+    <wire>
+      <p1 x="-240" y="220"/>
+      <p2 x="-120" y="220"/>
+    </wire>
+    <wire>
+      <p1 x="-60" y="220"/>
+      <p2 x="-40" y="220"/>
+    </wire>
+    <wire>
+      <p1 x="-520" y="20"/>
+      <p2 x="-520" y="160"/>
+    </wire>
+    <wire>
+      <p1 x="-40" y="20"/>
+      <p2 x="-40" y="80"/>
+    </wire>
+    <wire>
+      <p1 x="-40" y="120"/>
+      <p2 x="-40" y="220"/>
+    </wire>
+    <wire>
+      <p1 x="-200" y="-40"/>
+      <p2 x="-200" y="0"/>
+    </wire>
+    <wire>
+      <p1 x="140" y="-40"/>
+      <p2 x="140" y="100"/>
+    </wire>
+    <wire>
+      <p1 x="-320" y="160"/>
+      <p2 x="-320" y="200"/>
+    </wire>
+    <wire>
+      <p1 x="-400" y="60"/>
+      <p2 x="-400" y="240"/>
+    </wire>
+  </wires>
+  <measurementOrdering/>
+</circuit>
