@@ -1,0 +1,43 @@
+{
+    "files.associations": {
+        "init.h": "c",
+        "ide.h": "c",
+        "kernel.h": "c",
+        "printk.h": "c",
+        "uaccess.h": "c",
+        "of_address.h": "c",
+        "of.h": "c",
+        "slab.h": "c",
+        "of_gpio.h": "c",
+        "gpio.h": "c",
+        "stdio.h": "c",
+        "types.h": "c",
+        "atomic.h": "c",
+        "debugobjects.h": "c",
+        "ioctl.h": "c",
+        "of_irq.h": "c",
+        "type_traits": "c",
+        "poll.h": "c",
+        "limits": "c",
+        "platform_device.h": "c",
+        "cdev.h": "c",
+        "device.h": "c",
+        "delay.h": "c",
+        "input.h": "c",
+        "i2c.h": "c",
+        "ap3216c.h": "c",
+        "icm20608.h": "c",
+        "spi.h": "c",
+        "mt.h": "c",
+        "iio.h": "c"
+    },
+    "search.exclude": {
+        "*/.vscode": true,
+    },
+    "files.exclude": {
+        "*/.vscode": true,
+        "**/0[1-9]*": true,
+        "**/1[0-9]*": true,
+        "**/2[0-3]*": true,
+    }
+}

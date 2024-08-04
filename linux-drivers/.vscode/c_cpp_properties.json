@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/liu/imx6ull/linux-imx-rel_imx_4.1.15_2.1.0_ga/include/",
+                "/home/liu/imx6ull/linux-imx-rel_imx_4.1.15_2.1.0_ga/include/linux",
+                "/home/liu/imx6ull/linux-imx-rel_imx_4.1.15_2.1.0_ga/arch/arm/include/",
+                "/home/liu/imx6ull/linux-imx-rel_imx_4.1.15_2.1.0_ga/arch/arm/include/generated/"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "linux-gcc-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
+        }
+    ],
+    "version": 4
+}
