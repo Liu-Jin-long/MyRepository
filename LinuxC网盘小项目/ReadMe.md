@@ -46,7 +46,7 @@ mysql -u username -p password NetworkDiskDatabase < NetworkDiskDatabase.sql
 
 #### 编译和运行
 
-1、分别进入server和client目录  使用make编译生成可执行文件server和client
+1、分别进入server和client目录，使用make编译生成可执行文件server和client
 注：可以使用make clean清理删除生成的.o文件和可执行文件，还可以使用make rebuild重新构建（其实就是make clean;make的功能）
 ```
 cd LinuxC网盘小项目/server/
