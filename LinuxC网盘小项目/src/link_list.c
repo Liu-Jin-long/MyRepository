@@ -1,6 +1,7 @@
 #include "link_list.h"
 #include "common.h"
-//客户端信息链表头插法插入结点
+#include "tcp_epoll_op.h"
+// 客户端信息链表头插法插入结点
 void link_list_head_insert(LinkList *head, client_info_t data)
 {
 	LNode *p = (LNode *)calloc(1, sizeof(LNode));
@@ -17,7 +18,7 @@ void link_list_head_insert(LinkList *head, client_info_t data)
 		*head = p;
 	}
 }
-//客户端信息链表删除结点
+// 客户端信息链表删除结点
 void link_list_delete_node(LinkList *head, int sfd)
 {
 	LNode *p, *pre;
@@ -27,7 +28,7 @@ void link_list_delete_node(LinkList *head, int sfd)
 		printf("链表已为空");
 		return;
 	}
-	if (p->client_info.sfd == sfd) //删除头结点
+	if (p->client_info.sfd == sfd) // 删除头结点
 	{
 		*head = p->next;
 		free(p);
@@ -38,7 +39,7 @@ void link_list_delete_node(LinkList *head, int sfd)
 	{
 		while (p)
 		{
-			if (p->client_info.sfd == sfd) //若删除尾结点，pre->next=NULL;
+			if (p->client_info.sfd == sfd) // 若删除尾结点，pre->next=NULL;
 			{
 				pre->next = p->next;
 				free(p);
@@ -50,7 +51,7 @@ void link_list_delete_node(LinkList *head, int sfd)
 		p = pre = NULL;
 	}
 }
-//轮盘链表头插法插入结点
+// 轮盘链表头插法插入结点
 void roulette_link_list_head_insert(LinkList_Timeout *head, int sfd)
 {
 	LNode_Timeout *p = (LNode_Timeout *)calloc(1, sizeof(LNode_Timeout));
@@ -66,7 +67,7 @@ void roulette_link_list_head_insert(LinkList_Timeout *head, int sfd)
 		*head = p;
 	}
 }
-//轮盘所有链表删除相应结点
+// 轮盘所有链表删除相应结点
 void roulette_link_list_delete_node(LinkList_Timeout *roulette, int sfd)
 {
 	LNode_Timeout *p, *pre;
@@ -77,7 +78,7 @@ void roulette_link_list_delete_node(LinkList_Timeout *roulette, int sfd)
 		{
 			continue;
 		}
-		if (p->sfd == sfd) //删除头结点
+		if (p->sfd == sfd) // 删除头结点
 		{
 			*(roulette + i) = p->next;
 			free(p);
@@ -88,7 +89,7 @@ void roulette_link_list_delete_node(LinkList_Timeout *roulette, int sfd)
 		{
 			while (p)
 			{
-				if (p->sfd == sfd) //若删除尾结点，pre->next=NULL;
+				if (p->sfd == sfd) // 若删除尾结点，pre->next=NULL;
 				{
 					pre->next = p->next;
 					free(p);
@@ -102,8 +103,8 @@ void roulette_link_list_delete_node(LinkList_Timeout *roulette, int sfd)
 		}
 	}
 }
-//轮盘删除一个链表
-void roulette_delete_link_list(LinkList_Timeout *timeout_list_head, LinkList *head)
+// 轮盘超时删除一个链表
+void roulette_delete_link_list(LinkList_Timeout *timeout_list_head, LinkList *head, int epfd)
 {
 	LNode_Timeout *p, *tmp;
 	p = tmp = *timeout_list_head;
@@ -112,6 +113,9 @@ void roulette_delete_link_list(LinkList_Timeout *timeout_list_head, LinkList *he
 		if (p)
 		{
 			link_list_delete_node(head, p->sfd);
+			// 取消监控
+			epoll_delete(epfd, p->sfd);
+			// printf("epoll_delete %d\n", p->sfd);
 			close(p->sfd);
 			tmp = p->next;
 			free(p);
@@ -120,17 +124,17 @@ void roulette_delete_link_list(LinkList_Timeout *timeout_list_head, LinkList *he
 	}
 	*timeout_list_head = NULL;
 }
-//更新轮盘 检查流逝时间
-void roulette_update_and_check(LinkList_Timeout *roulette, LinkList *head, int *index, time_t *p_past, int sfd)
+// 更新轮盘 检查流逝时间
+void roulette_update_and_check(LinkList_Timeout *roulette, LinkList *head, int *index, time_t *p_past, int epfd, int sfd)
 {
 	if (sfd != -1)
 	{
-		//删除轮盘中存在的该sfd
+		// 删除轮盘中存在的该sfd
 		roulette_link_list_delete_node(roulette, sfd);
-		//插入到当前轮盘索引的链表
+		// 插入到当前轮盘索引的链表
 		roulette_link_list_head_insert(roulette + *index, sfd);
 	}
-	//检查当前时间是否走了一秒
+	// 检查当前时间是否走了一秒
 	time_t now = time(NULL);
 	if (now - *p_past >= 1)
 	{
@@ -140,9 +144,9 @@ void roulette_update_and_check(LinkList_Timeout *roulette, LinkList *head, int *
 		{
 			*index = 0;
 		}
-		roulette_delete_link_list(roulette + *index, head);
+		roulette_delete_link_list(roulette + *index, head, epfd);
 	}
-	//打印
+	// 打印
 	if (0 == *index % 10)
 	{
 
@@ -153,7 +157,7 @@ void roulette_update_and_check(LinkList_Timeout *roulette, LinkList *head, int *
 			p = *(roulette + i);
 			while (p)
 			{
-				
+
 				printf("轮盘索引%d有fd=%d  ", i, p->sfd);
 				p = p->next;
 			}

@@ -1,5 +1,6 @@
 out:=server
 SRCS:=$(wildcard ../src/*.c) #拿到目录下所有的c文件
+SRCS:=$(filter-out ../src/client_op.c, $(SRCS))
 OBJS:=$(patsubst ../src/%.c,%.o,$(SRCS))
 #预定义变量
 CC:=gcc

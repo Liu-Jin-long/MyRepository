@@ -6,9 +6,19 @@
 #include "tcp_epoll_op.h"
 int main(int argc, char **argv)
 {
-    char *ip = IP;
-    char *port = PORT;
-    //如果没有文件池所在文件夹就创建
+    char *ip, *port;
+    if (argc == 3)
+    {
+        ip = argv[1];
+        port = argv[2];
+    }
+    else
+    {
+        ip = IP;
+        port = PORT;
+    }
+    printf("ip=%s port=%s\n", ip, port);
+    // 如果没有文件池所在文件夹就创建
     if (-1 == access(FILE_POOL_PATH, F_OK))
     {
         if (-1 == mkdir(FILE_POOL_PATH, 0755))
@@ -37,7 +47,6 @@ int main(int argc, char **argv)
     char username[64] = {0};
     LNode *p = NULL;
     time_t past = time(NULL);
-    ;
     while (1)
     {
         ready_num = epoll_wait(epfd, events, maxevents, 1000);
@@ -54,7 +63,7 @@ int main(int argc, char **argv)
                     new_fd = accept(socket_fd, (struct sockaddr *)&client_addr, &addr_len);
                     ERROR_CHECK(new_fd, -1, "accept")
                     printf("%s %d is connected!\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
-                    //连接成功后接收一次信息  处理REGISTER、LOGIN或者TOKEN
+                    // 连接成功后接收一次信息  处理REGISTER、LOGIN或者TOKEN
                     state_train_t state_data = {0};
                     ret = recv_n(new_fd, &state_data.data_len, sizeof(int));
                     SELFFUNC_ERR_CHECK(ret, "recv_n")
@@ -64,45 +73,45 @@ int main(int argc, char **argv)
                     {
                         if (state_data.state == REGISTER)
                         {
-                            //注册
+                            // 注册
                             ret = do_register(&state_data, new_fd, username);
                         }
                         else if (state_data.state == LOGIN)
                         {
-                            //登录
+                            // 登录
                             ret = do_login(&state_data, new_fd, username);
                         }
                         if (-1 == ret)
                         {
-                            //注册或登录失败
+                            // 注册或登录失败
                             printf("socket_fd=%d %s失败\n", new_fd, state_data.state == LOGIN ? "登录" : "注册");
                             close(new_fd);
                         }
                         else
                         {
-                            //注册或登录成功
-                            //先发送token
+                            // 注册或登录成功
+                            // 先发送token
                             state_train_t token_data = {0};
                             token_data.state = TOKEN;
                             token_data.data_len = TOKEN_LEN + sizeof(int);
                             generate_random_string(token_data.buf, TOKEN_LEN);
                             ret = send_n(new_fd, &token_data, token_data.data_len + sizeof(int));
                             SELFFUNC_ERR_CHECK(ret, "send_n")
-                            //添加维护客户端信息到链表
+                            // 添加维护客户端信息到链表
                             client_info_t client_info = {0};
                             client_info.sfd = new_fd;
                             strcpy(client_info.username, username);
-                            //客户端登录或注册初始
+                            // 客户端登录或注册初始
                             strcpy(client_info.path, "/");
                             client_info.code = 0;
                             strncpy(client_info.token, token_data.buf, TOKEN_LEN);
                             printf("用户%s%s成功 token=%s\n", username, state_data.state == LOGIN ? "登录" : "注册", token_data.buf);
                             link_list_head_insert(&clientInfo_linkList, client_info);
-                            //加入epoll_wait监控
+                            // 加入epoll_wait监控
                             epoll_add(epfd, new_fd);
                             maxevents++;
-                            //添加到轮盘当前索引链表中
-                            roulette_update_and_check(roulette, &clientInfo_linkList, &j, &past, new_fd);
+                            // 添加到轮盘当前索引链表中
+                            roulette_update_and_check(roulette, &clientInfo_linkList, &j, &past, -1, new_fd);
                         }
                     }
                     else if (state_data.state == TOKEN)
@@ -139,7 +148,7 @@ int main(int argc, char **argv)
                             state_data.data_len = sizeof(state_data.state);
                             send_n(new_fd, &state_data, state_data.data_len + sizeof(int));
                             SELFFUNC_ERR_CHECK(ret, "send_n")
-                            //接收信息 处理GETS或者PUTS
+                            // 接收信息 处理GETS或者PUTS
                             bzero(&state_data, sizeof(state_data));
                             ret = recv_n(new_fd, &state_data.data_len, sizeof(int));
                             SELFFUNC_ERR_CHECK(ret, "recv_n")
@@ -147,7 +156,7 @@ int main(int argc, char **argv)
                             SELFFUNC_ERR_CHECK(ret, "recv_n")
                             if (state_data.state == PUTS || state_data.state == GETS)
                             {
-                                //添加队列任务唤醒子线程
+                                // 添加队列任务唤醒子线程
                                 pnew = (pNode_t)calloc(1, sizeof(Node_t));
                                 pnew->sfd = new_fd;
                                 pnew->p_client_info = &p->client_info;
@@ -160,45 +169,46 @@ int main(int argc, char **argv)
                             }
                             else
                             {
-                                //客户端子进程的发送不是GETS或者PUTS
+                                // 客户端子进程的发送不是GETS或者PUTS
                                 close(new_fd);
                             }
                         }
                     }
                     else
                     {
-                        //客户端新连接第一次发送的不是REGISTER、LOGIN或者TOKEN
+                        // 客户端新连接第一次发送的不是REGISTER、LOGIN或者TOKEN
                         close(new_fd);
                     }
                 }
                 else
                 {
-                    //监控所有客户端命令请求
+                    // 监控所有客户端命令请求
                     p = clientInfo_linkList;
                     state_train_t state_data = {0};
                     while (p)
                     {
-                        //遍历维护的所有客户端信息
+                        // 遍历维护的所有客户端信息
                         if (events[i].data.fd == p->client_info.sfd)
                         {
-                            //先接收一次命令信息
+                            // 先接收一次命令信息
                             ret = recv_n(p->client_info.sfd, &state_data.data_len, sizeof(int));
                             if (ret == -1)
                             {
                                 printf("socket_fd=%d客户端断开连接\n", p->client_info.sfd);
-                                //删除轮盘中存在的该sfd
+                                // 删除轮盘中存在的该sfd
                                 roulette_link_list_delete_node(roulette, p->client_info.sfd);
-                                close(p->client_info.sfd);
-                                //取消监控
+                                // 取消监控
                                 epoll_delete(epfd, p->client_info.sfd);
-                                //删除客户端信息结点
+                                //printf("epoll_delete %d\n", p->client_info.sfd);
+                                close(p->client_info.sfd);
+                                // 删除客户端信息结点
                                 link_list_delete_node(&clientInfo_linkList, p->client_info.sfd);
                             }
                             else
                             {
                                 ret = recv_n(p->client_info.sfd, &state_data.state, state_data.data_len);
                                 SELFFUNC_ERR_CHECK(ret, "recv_n");
-                                //转到各个命令的处理函数
+                                // 转到各个命令的处理函数
                                 switch (state_data.state)
                                 {
                                 case LS:
@@ -220,8 +230,8 @@ int main(int argc, char **argv)
                                     break;
                                 }
                                 memset(&state_data, 0, sizeof(state_train_t));
-                                //更新和检查轮盘
-                                roulette_update_and_check(roulette, &clientInfo_linkList, &j, &past, p->client_info.sfd);
+                                // 更新和检查轮盘
+                                roulette_update_and_check(roulette, &clientInfo_linkList, &j, &past, -1, p->client_info.sfd);
                             }
                         }
                         p = p->next;
@@ -231,8 +241,8 @@ int main(int argc, char **argv)
         }
         else
         {
-            //更新和检查轮盘
-            roulette_update_and_check(roulette, &clientInfo_linkList, &j, &past, -1);
+            // 更新和检查轮盘
+            roulette_update_and_check(roulette, &clientInfo_linkList, &j, &past, epfd, -1);
         }
     }
     return 0;

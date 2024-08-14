@@ -1,6 +1,5 @@
 #include "thread_pool.h"
-#include "openacc.h"
-#include"operation.h"
+#include "operation.h"
 int thread_pool_init(thread_pool_t *ptp, int thread_num, int capacity)
 {
     bzero(ptp, sizeof(thread_pool_t));
@@ -41,20 +40,20 @@ void *thread_handle(void *p)
         pthread_cleanup_push(cleanup, &pq->mutex);
         if (0 == pq->queue_size)
         {
-            pthread_cond_wait(&ptp->cond, &pq->mutex); //趁锁
+            pthread_cond_wait(&ptp->cond, &pq->mutex); // 趁锁
         }
-        queue_get(pq, &pcur);   //获取新结点指针，不要在加减锁之间malloc
+        queue_get(pq, &pcur);   // 获取新结点指针，不要在加减锁之间malloc
         pthread_cleanup_pop(1); // pthread_mutex_unlock(&pq->mutex);//直接通过pop来解锁
-        if (pcur)               //拿到结点
+        if (pcur)               // 拿到结点
         {
             if (pcur->state == GETS)
             {
-                //printf("服务器子线程进入GETS处理\n");
+                // printf("服务器子线程进入GETS处理\n");
                 do_gets(pcur);
             }
             else if (pcur->state == PUTS)
             {
-                //printf("服务器子线程进入PUTS处理\n");
+                // printf("服务器子线程进入PUTS处理\n");
                 do_puts(pcur);
             }
             close(pcur->sfd);

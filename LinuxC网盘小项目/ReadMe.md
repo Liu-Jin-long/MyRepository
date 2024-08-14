@@ -46,13 +46,23 @@ mysql -u username -p password NetworkDiskDatabase < NetworkDiskDatabase.sql
 
 #### 编译和运行
 
-1、进入server和client目录  使用make命令进行编译生成可执行文件server （偷懒写法src C源文件都编译成目标文件到当前目录🤣）
-
+1、分别进入server和client目录  使用make编译生成可执行文件server和client
 注：可以使用make clean清理删除生成的.o文件和可执行文件      还可以使用make rebuild重新构建（其实就是make clean;make的功能）
+```
+cd LinuxC网盘小项目/server/
+make
+```
 
 ```
 如果找不到<mysql/mysql.h>
 sudo apt install libmysqlclient-dev
 ```
 
-2、在各子目录下./server和./client运行
+2、分别在server目录和client目录下运行
+```
+./server IP PORT
+```
+```
+./client IP PORT
+```
+注：命令行传参会覆盖掉config.h中的IP和PORT默认配置

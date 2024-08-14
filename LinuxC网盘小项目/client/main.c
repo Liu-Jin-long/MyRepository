@@ -2,10 +2,20 @@
 #include "tcp_epoll_op.h"
 #include "transfer_file.h"
 #include "client_op.h"
-int main()
+int main(int argc, char **argv)
 {
-    char *ip = "127.0.0.1";
-    char *port = "2000";
+    char *ip, *port;
+    if (argc == 3)
+    {
+        ip = argv[1];
+        port = argv[2];
+    }
+    else
+    {
+        ip = IP;
+        port = PORT;
+    }
+    printf("ip=%s port=%s\n", ip, port);
     int sfd = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in server_addr;
     bzero(&server_addr, sizeof(server_addr));
@@ -16,7 +26,7 @@ int main()
     int option = 0;
     while (1)
     {
-        //选择注册还是登录
+        // 选择注册还是登录
         printf("请选择:\n");
         printf("1、注册\n");
         printf("2、登录\n");
@@ -46,14 +56,14 @@ int main()
     printf("请输入密码\n");
     char password[100] = {0};
     scanf("%s", password);
-    //发送用户名和密码
+    // 发送用户名和密码
     state_train_t state_data = {0};
     state_data.state = option;
-    sprintf(state_data.buf, "%s %s", user_name, password); //以空格隔开用户名和密码
+    sprintf(state_data.buf, "%s %s", user_name, password); // 以空格隔开用户名和密码
     state_data.data_len = sizeof(int) + strlen(state_data.buf);
     ret = connect(sfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
     ERROR_CHECK(ret, -1, "connect")
-    //接收注册或登陆是否成功状态的服务器反馈
+    // 接收注册或登陆是否成功状态的服务器反馈
     ret = send_n(sfd, &state_data, sizeof(int) + state_data.data_len);
     SELFFUNC_ERR_CHECK(ret, "send_n")
     bzero(&state_data, sizeof(state_train_t));
@@ -90,7 +100,7 @@ int main()
             printf("%s登录成功!\n", user_name);
         }
     }
-    //接收Token
+    // 接收Token
     bzero(&state_data, sizeof(state_train_t));
     ret = recv_n(sfd, &state_data.data_len, sizeof(int));
     SELFFUNC_ERR_CHECK(ret, "recv_n")
@@ -100,7 +110,7 @@ int main()
         printf("TOKEN标志错误\n");
         return -1;
     }
-    //printf("token=%s\n", state_data.buf);
+    // printf("token=%s\n", state_data.buf);
     char token[TOKEN_LEN] = {0};
     strncpy(token, state_data.buf, TOKEN_LEN);
     SELFFUNC_ERR_CHECK(ret, "recv_n")
@@ -115,6 +125,8 @@ int main()
     p_client_child_pthread_info p_pthread_info = NULL;
     while (1)
     {
+        printf("@%s # ", user_name);
+        fflush(stdout); 
         ready_num = epoll_wait(epfd, events, 2, -1);
         for (i = 0; i < ready_num; ++i)
         {
@@ -129,7 +141,7 @@ int main()
                     return 0;
                 }
                 buf_len = strlen(buf) - 1;
-                buf[buf_len] = '\0'; //去除最后的\n
+                buf[buf_len] = '\0'; // 去除最后的\n
                 char cmd[10] = {0};
                 has_space = 0;
                 for (j = 0; j < buf_len; j++)
@@ -160,12 +172,12 @@ int main()
                     }
                     else
                     {
-                        printf("服务器发送LS标志错误!");
+                        printf("服务器发送LS标志错误!\n");
                     }
                 }
                 else if (0 == strcmp(cmd, "cd"))
                 {
-                    //输入命令要有空格以及空格之后要有内容
+                    // 输入命令要有空格以及空格之后要有内容
                     if (has_space && strlen(buf) > strlen(cmd) + 1)
                     {
                         state_data.state = CD;
@@ -206,12 +218,12 @@ int main()
                     }
                     else
                     {
-                        printf("服务器发送PWD标志错误!");
+                        printf("服务器发送PWD标志错误!\n");
                     }
                 }
                 else if (0 == strcmp(cmd, "mkdir"))
                 {
-                    //输入命令要有空格以及空格之后要有内容
+                    // 输入命令要有空格以及空格之后要有内容
                     if (has_space && strlen(buf) > strlen(cmd) + 1)
                     {
                         state_data.state = MKDIR;
@@ -246,11 +258,12 @@ int main()
                     printf("不支持的命令%s\n", cmd);
                 }
             }
+
             if (events[i].data.fd == sfd)
             {
-                char exit_sign[1]={0};
-                ret=recv_n(sfd,exit_sign,sizeof(exit_sign));
-                if(ret==-1)
+                char exit_sign[1] = {0};
+                ret = recv_n(sfd, exit_sign, sizeof(exit_sign));
+                if (ret == -1)
                 {
                     printf("服务器关闭连接\n");
                     return 0;

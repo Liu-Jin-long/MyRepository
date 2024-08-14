@@ -1,10 +1,11 @@
 out:=client
-SRCS:=$(wildcard ../src/*.c) #拿到目录下所有的c文件
+SRCS:=../src/client_op.c ../src/tcp_epoll_op.c ../src/transfer_file.c ../src/md5sum.c
 OBJS:=$(patsubst ../src/%.c,%.o,$(SRCS))
 #预定义变量
+#CC:=arm-linux-gnueabihf-gcc
 CC:=gcc
-CFLAGS:=-I /usr/include/mysql -I ../include -g -D DEBUG
-LDFLAGS:= -pthread -lmysqlclient -lcrypt
+CFLAGS:=-I ../include -g -D DEBUG -std=c99
+LDFLAGS:= -pthread -lcrypt
 all:$(out)
 $(out):$(OBJS) main.o
 	$(CC) $^ -o $@ $(LDFLAGS)
